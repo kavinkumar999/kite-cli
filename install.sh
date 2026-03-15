@@ -16,7 +16,16 @@ NC='\033[0m'
 
 info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
-error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
+error() { echo -e "${RED}[ERROR]${NC} $1"; cleanup; exit 1; }
+
+# Cleanup temp files on exit
+cleanup() {
+    rm -f /tmp/kite /tmp/kite.tar.gz 2>/dev/null || true
+    rm -rf /tmp/kite-cli-* 2>/dev/null || true
+}
+
+# Set trap to cleanup on script exit
+trap cleanup EXIT
 
 # Detect OS and architecture
 detect_platform() {
