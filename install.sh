@@ -86,7 +86,16 @@ build_from_source() {
     cd kite-cli
     
     info "Building..."
-    go build -ldflags="-s -w" -o "$BINARY_NAME" .
+    VERSION=$(git describe --tags --always 2>/dev/null || echo "dev")
+    BUILD_TIME=$(date -u '+%Y-%m-%d %H:%M:%S')
+    GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+    
+    LDFLAGS="-s -w"
+    LDFLAGS="$LDFLAGS -X 'github.com/kavinkumar999/kite-cli/cmd.Version=$VERSION'"
+    LDFLAGS="$LDFLAGS -X 'github.com/kavinkumar999/kite-cli/cmd.BuildTime=$BUILD_TIME'"
+    LDFLAGS="$LDFLAGS -X 'github.com/kavinkumar999/kite-cli/cmd.GitCommit=$GIT_COMMIT'"
+    
+    go build -ldflags="$LDFLAGS" -o "$BINARY_NAME" .
     
     mv "$BINARY_NAME" /tmp/
     cd /

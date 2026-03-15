@@ -194,17 +194,45 @@ kite sell SBIN 100 --product MIS
 
 ## Update
 
-To update to the latest version:
+### Quick Update (Recommended)
+
+```bash
+kite update
+```
+
+### Check for Updates
+
+```bash
+kite update --check
+```
+
+### Manual Update
 
 ```bash
 # Option 1: Re-run install script
 curl -sSL https://raw.githubusercontent.com/kavinkumar999/kite-cli/main/install.sh | bash
 
-# Option 2: Manual update
+# Option 2: Build from source
 cd /path/to/kite-cli
 git pull origin main
-go build -ldflags="-s -w" -o kite .
-cp kite ~/bin/
+make install
+```
+
+## Version
+
+Check your installed version:
+
+```bash
+kite version
+```
+
+Output:
+```
+Kite CLI v0.1.0
+  Build time: 2026-03-15 10:30:00
+  Git commit: abc1234
+  Go version: go1.21.0
+  OS/Arch:    darwin/arm64
 ```
 
 ## Uninstall
