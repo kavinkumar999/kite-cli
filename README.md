@@ -209,7 +209,13 @@ cp kite ~/bin/
 
 ## Uninstall
 
-To completely remove Kite CLI:
+### Quick Uninstall (Recommended)
+
+```bash
+curl -sSL https://raw.githubusercontent.com/kavinkumar999/kite-cli/main/uninstall.sh | bash
+```
+
+### Manual Uninstall
 
 ```bash
 # 1. Remove binary
@@ -228,7 +234,7 @@ rm ~/.zsh/completions/_kite 2>/dev/null
 rm -rf /path/to/kite-cli
 ```
 
-### One-liner Uninstall
+### One-liner Uninstall (No prompts)
 
 ```bash
 rm -f ~/bin/kite ~/.kite.yaml ~/.zsh/completions/_kite
