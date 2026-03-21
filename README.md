@@ -57,42 +57,23 @@ kite completion bash > /etc/bash_completion.d/kite
 ### 1. Get API Credentials
 
 1. Go to [Kite Connect Developer Console](https://developers.kite.trade/)
-2. Create a new app (costs ₹2000/month)
+2. Create a new app
 3. Note your **API Key** and **API Secret**
 
-### 2. Configure CLI
+### 2. Add Account
 
-**Option A: Interactive (stores in ~/.kite.yaml)**
 ```bash
 kite auth
-# Enter your API Key and API Secret when prompted
-```
-
-**Option B: Environment Variables (more secure)**
-```bash
-# Add to ~/.zshrc or ~/.bashrc
-export KITE_API_KEY="your_api_key"
-export KITE_API_SECRET="your_api_secret"
-export KITE_ACCESS_TOKEN="your_access_token"
-```
-
-**Option C: Manual config file**
-```bash
-# Create ~/.kite.yaml manually
-cat > ~/.kite.yaml << EOF
-api_key: your_api_key
-api_secret: your_api_secret
-access_token: your_access_token
-EOF
-
-# Set secure permissions
-chmod 600 ~/.kite.yaml
+# Enter account name: alice
+# Enter your API Key: xxx
+# Enter your API Secret: xxx
 ```
 
 ### 3. Login (Required Daily)
 
 ```bash
 kite login
+# Logging in as: alice
 # 1. Open the URL in browser
 # 2. Login with Zerodha credentials + OTP
 # 3. Copy request_token from redirect URL
@@ -100,6 +81,45 @@ kite login
 ```
 
 > **Note**: Access token expires daily at ~6 AM IST. Run `kite login` each trading day.
+
+## Multi-Account Support
+
+Kite CLI supports multiple accounts (e.g., for family members). Each account is identified by an alias name.
+
+### Adding More Accounts
+
+```bash
+kite auth
+# Enter account name: bob
+# Enter your API Key: yyy
+# Enter your API Secret: yyy
+```
+
+### Listing Accounts
+
+```bash
+kite ls
+# Connected accounts:
+#
+#   ● alice (Alice Kumar) - current
+#     bob (Bob Kumar)
+#
+# Use 'kite use <alias>' to switch accounts
+```
+
+### Switching Accounts
+
+```bash
+kite use bob
+# ✓ Switched to account: bob (Bob Kumar)
+```
+
+### Removing Accounts
+
+```bash
+kite remove bob
+# ✓ Account 'bob' removed
+```
 
 ## Usage
 
@@ -179,12 +199,26 @@ kite sell SBIN 100 --product MIS
 ~/.kite.yaml
 ```
 
-### Config Priority
+### Config File Format
 
-1. **Environment variables** (highest priority)
-2. **~/.kite.yaml** (fallback)
+```yaml
+current_account: alice
+accounts:
+  alice:
+    api_key: your_api_key
+    api_secret: your_api_secret
+    access_token: your_access_token
+    user_name: Alice Kumar
+  bob:
+    api_key: another_api_key
+    api_secret: another_api_secret
+    access_token: another_access_token
+    user_name: Bob Kumar
+```
 
-### Environment Variables
+### Environment Variables (Override)
+
+Environment variables take highest priority and override the config file:
 
 | Variable | Description |
 |----------|-------------|

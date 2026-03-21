@@ -132,6 +132,39 @@ add_to_path() {
     fi
 }
 
+# Setup shell completions
+setup_completions() {
+    # Only setup zsh completions if using zsh
+    if [ -f "$HOME/.zshrc" ]; then
+        ZSHRC="$HOME/.zshrc"
+        COMPLETIONS_DIR="$HOME/.zsh/completions"
+        
+        # Create completions directory
+        mkdir -p "$COMPLETIONS_DIR"
+        
+        # Generate completion file
+        "${INSTALL_DIR}/${BINARY_NAME}" completion zsh > "$COMPLETIONS_DIR/_kite" 2>/dev/null
+        if [ $? -eq 0 ]; then
+            info "Generated zsh completions"
+        fi
+        
+        # Add fpath if not already present
+        if ! grep -q 'fpath=(~/.zsh/completions $fpath)' "$ZSHRC" 2>/dev/null; then
+            echo '' >> "$ZSHRC"
+            echo '# Zsh completions' >> "$ZSHRC"
+            echo 'fpath=(~/.zsh/completions $fpath)' >> "$ZSHRC"
+            info "Added fpath to $ZSHRC"
+        fi
+        
+        # Add compinit if not already present
+        if ! grep -q 'autoload -Uz compinit' "$ZSHRC" 2>/dev/null && ! grep -q 'autoload -U compinit' "$ZSHRC" 2>/dev/null; then
+            echo 'autoload -Uz compinit' >> "$ZSHRC"
+            echo 'compinit' >> "$ZSHRC"
+            info "Added compinit to $ZSHRC"
+        fi
+    fi
+}
+
 # Install binary to ~/bin
 install() {
     info "Installing to ${INSTALL_DIR}/${BINARY_NAME}..."
@@ -141,6 +174,7 @@ install() {
     chmod +x "${INSTALL_DIR}/${BINARY_NAME}"
     
     add_to_path
+    setup_completions
 }
 
 # Verify installation
