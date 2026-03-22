@@ -6,7 +6,6 @@ export default defineConfig({
   base: '/kite-cli/',
   
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/kite-cli/logo.svg' }],
     ['meta', { name: 'theme-color', content: '#387ED1' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'Kite CLI' }],
@@ -14,8 +13,6 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: '/logo.svg',
-    
     nav: [
       { text: 'Guide', link: '/' },
       { text: 'GitHub', link: 'https://github.com/kavinkumar999/kite-cli' }
@@ -52,11 +49,6 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/kavinkumar999/kite-cli' }
     ],
-
-    footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024-present Kavin Kumar'
-    },
 
     search: {
       provider: 'local'
