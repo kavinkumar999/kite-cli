@@ -64,17 +64,36 @@ install_binary() {
     LATEST_RELEASE=$(curl -sSL "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/' || echo "")
     
     if [ -z "$LATEST_RELEASE" ]; then
-        warn "No pre-built releases found. Building from source..."
+        warn "No releases found. Building from source..."
         return 1
     fi
 
     DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${LATEST_RELEASE}/kite_${PLATFORM}.tar.gz"
     
     info "Downloading ${BINARY_NAME} ${LATEST_RELEASE}..."
-    curl -sSL "$DOWNLOAD_URL" -o /tmp/kite.tar.gz || return 1
     
-    tar -xzf /tmp/kite.tar.gz -C /tmp
-    rm /tmp/kite.tar.gz
+    # Use -f to fail on HTTP errors (404, etc.)
+    if ! curl -fsSL "$DOWNLOAD_URL" -o /tmp/kite.tar.gz 2>/dev/null; then
+        warn "No pre-built binary for ${PLATFORM}. Building from source..."
+        rm -f /tmp/kite.tar.gz 2>/dev/null
+        return 1
+    fi
+    
+    # Verify it's a valid gzip file
+    if ! gzip -t /tmp/kite.tar.gz 2>/dev/null; then
+        warn "Downloaded file is not valid. Building from source..."
+        rm -f /tmp/kite.tar.gz 2>/dev/null
+        return 1
+    fi
+    
+    tar -xzf /tmp/kite.tar.gz -C /tmp || return 1
+    rm -f /tmp/kite.tar.gz
+    
+    # Verify binary exists after extraction
+    if [ ! -f /tmp/kite ]; then
+        warn "Binary not found in archive. Building from source..."
+        return 1
+    fi
     
     return 0
 }
