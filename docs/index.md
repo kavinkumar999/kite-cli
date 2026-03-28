@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: Kite CLI
-  text: Trade from your terminal
-  tagline: A blazing fast command-line interface for Zerodha Kite. Execute trades, view portfolio, check margins - all from your terminal.
+  text: Manage family trading accounts from your terminal
+  tagline: Switch between multiple Zerodha accounts instantly. Execute trades for yourself, spouse, parents - all from one terminal.
   actions:
     - theme: brand
       text: Get Started
@@ -14,19 +14,40 @@ hero:
       link: https://github.com/kavinkumar999/kite-cli
 
 features:
+  - icon: 👨‍👩‍👧‍👦
+    title: Family Account Management
+    details: Add unlimited family accounts - spouse, parents, children. Each account with its own alias for easy identification.
+  - icon: 🔄
+    title: Instant Account Switching
+    details: Switch between accounts with a single command. No logout/login needed. Execute trades for any family member in seconds.
   - icon: ⚡
-    title: Lightning Fast
-    details: Execute trades instantly without opening a browser. Built with Go for maximum performance.
-  - icon: 👥
-    title: Multi-Account Support
-    details: Manage multiple Zerodha accounts seamlessly. Switch between family accounts with a single command.
+    title: Lightning Fast Trading
+    details: Place orders instantly without opening a browser. Buy, sell, check holdings - all from your terminal.
   - icon: 🛡️
-    title: Secure
-    details: Credentials stored locally with strict file permissions. Environment variable support for CI/CD.
-  - icon: 🔧
-    title: Shell Completion
-    details: Tab autocompletion for commands and flags. Works with Zsh and Bash.
+    title: Secure & Local
+    details: All credentials stored locally with strict file permissions. No cloud storage. Your data stays on your machine.
 ---
+
+## Why Kite CLI?
+
+Managing trading accounts for your entire family? Tired of logging in and out of different Zerodha accounts? Kite CLI lets you:
+
+- **Add all family accounts once** - Set up accounts for yourself, spouse, parents, kids
+- **Switch instantly** - One command to switch between any account
+- **Trade for anyone** - Execute orders for any family member without browser hassle
+- **View all portfolios** - Check holdings and positions across accounts quickly
+
+```bash
+# Morning routine - login all family accounts
+kite use self && kite login
+kite use spouse && kite login  
+kite use dad && kite login
+
+# Execute trades for different family members
+kite use self && kite buy RELIANCE 10
+kite use spouse && kite buy TCS 5
+kite use dad && kite sell INFY 20
+```
 
 ## Installation
 
@@ -37,8 +58,6 @@ curl -sSL https://raw.githubusercontent.com/kavinkumar999/kite-cli/main/install.
 ```
 
 ### Manual Installation
-
-If you prefer to install manually without the script:
 
 ```bash
 # 1. Clone the repository
@@ -86,101 +105,124 @@ kite completion bash > /etc/bash_completion.d/kite
 
 ### 1. Get API Credentials
 
-1. Go to [Kite Connect Developer Console](https://developers.kite.trade/)
-2. Create a new app
-3. Note your **API Key** and **API Secret**
+Each family member needs their own Kite Connect app:
 
-### 2. Add Account
+1. Go to [Kite Connect Developer Console](https://developers.kite.trade/)
+2. Login with the Zerodha account
+3. Create a new app
+4. Note the **API Key** and **API Secret**
+
+::: tip Family Setup
+Repeat this for each family member's Zerodha account. Each person needs their own API credentials.
+:::
+
+### 2. Add Family Accounts
+
+Add each family member with a memorable alias:
 
 ```bash
+# Add your account
 kite auth
-# Enter account name: alice
+# Enter account name: self
 # Enter your API Key: xxx
 # Enter your API Secret: xxx
+
+# Add spouse's account
+kite auth
+# Enter account name: spouse
+# Enter your API Key: yyy
+# Enter your API Secret: yyy
+
+# Add parent's account
+kite auth
+# Enter account name: dad
+# Enter your API Key: zzz
+# Enter your API Secret: zzz
 ```
 
-### 3. Login (Required Daily)
+### 3. Daily Login
+
+Login is required once per day for each account (token expires at ~6 AM IST):
 
 ```bash
-kite login
-# Logging in as: alice
-# 1. Open the URL in browser
-# 2. Login with Zerodha credentials + OTP
-# 3. Copy request_token from redirect URL
-# 4. Paste it in terminal
+# Login to each account
+kite use self && kite login
+kite use spouse && kite login
+kite use dad && kite login
 ```
 
 ::: warning Daily Login Required
-Access token expires daily at ~6 AM IST. Run `kite login` each trading day.
+Access token expires daily at ~6 AM IST. Run `kite login` for each account every trading day.
 :::
 
-## Multi-Account Support
+## Managing Family Accounts
 
-Kite CLI supports multiple accounts (e.g., for family members). Each account is identified by an alias name.
-
-### Adding More Accounts
-
-```bash
-kite auth
-# Enter account name: bob
-# Enter your API Key: yyy
-# Enter your API Secret: yyy
-```
-
-### Listing Accounts
+### View All Accounts
 
 ```bash
 kite ls
 # Connected accounts:
 #
-#   ● alice (Alice Kumar) - current
-#     bob (Bob Kumar)
+#   ● self (Kavin Kumar) - current
+#     spouse (Priya Kumar)
+#     dad (Raj Kumar)
+#     mom (Lakshmi Kumar)
 #
 # Use 'kite use <alias>' to switch accounts
 ```
 
-### Switching Accounts
+### Switch Between Accounts
 
 ```bash
-kite use bob
-# ✓ Switched to account: bob (Bob Kumar)
+kite use spouse
+# ✓ Switched to account: spouse (Priya Kumar)
+
+kite use dad
+# ✓ Switched to account: dad (Raj Kumar)
 ```
 
-### Removing Accounts
+### Remove an Account
 
 ```bash
-kite remove bob
-# ✓ Account 'bob' removed
+kite remove mom
+# ✓ Account 'mom' removed
 ```
 
 ## Trading
 
-### Buy Stocks
+### Execute Orders
 
 ```bash
+# Switch to account and trade
+kite use self
 kite buy ITC 10                    # Market order for 10 shares
 kite buy ITC 10 -p 450             # Limit order at ₹450
 kite buy ITC 10 --product MIS      # Intraday order
 kite buy RELIANCE 5 -e BSE         # Buy from BSE
-```
 
-### Sell Stocks
-
-```bash
+# Sell stocks
 kite sell ITC 10                   # Market order
 kite sell ITC 10 -p 460            # Limit order
-```
 
-### Test Orders
+# Test without placing real orders
+kite buy ITC 10 --dry-run
 
-```bash
-kite buy ITC 10 --dry-run          # Test without placing real orders
-```
-
-### Cancel Orders
-
-```bash
+# Cancel orders
 kite cancel <order_id>
+```
+
+### Quick Family Trading
+
+```bash
+# Buy same stock for multiple family members
+kite use self && kite buy RELIANCE 10
+kite use spouse && kite buy RELIANCE 10
+kite use dad && kite buy RELIANCE 5
+
+# Check everyone's holdings
+kite use self && kite holdings
+kite use spouse && kite holdings
+kite use dad && kite holdings
 ```
 
 ## Portfolio & Holdings
@@ -215,26 +257,6 @@ kite watchlist ITC RELIANCE TCS    # Multiple quotes
 | `--validity` | `-v` | DAY, IOC | DAY |
 | `--dry-run` | - | Test without placing order | false |
 
-## Examples
-
-```bash
-# Quick intraday trade
-kite buy SBIN 100 --product MIS
-
-# Limit order with specific price
-kite buy INFY 50 -p 1450
-
-# Stop-loss order
-kite sell TATASTEEL 25 -t 120 -p 119
-
-# Test order (no real trade)
-kite buy ITC 10 -p 400 --dry-run
-
-# Check position and square off
-kite portfolio
-kite sell SBIN 100 --product MIS
-```
-
 ## Configuration
 
 ### Config File Location
@@ -246,18 +268,23 @@ kite sell SBIN 100 --product MIS
 ### Config File Format
 
 ```yaml
-current_account: alice
+current_account: self
 accounts:
-  alice:
+  self:
     api_key: your_api_key
     api_secret: your_api_secret
     access_token: your_access_token
-    user_name: Alice Kumar
-  bob:
-    api_key: another_api_key
-    api_secret: another_api_secret
-    access_token: another_access_token
-    user_name: Bob Kumar
+    user_name: Kavin Kumar
+  spouse:
+    api_key: spouse_api_key
+    api_secret: spouse_api_secret
+    access_token: spouse_access_token
+    user_name: Priya Kumar
+  dad:
+    api_key: dad_api_key
+    api_secret: dad_api_secret
+    access_token: dad_access_token
+    user_name: Raj Kumar
 ```
 
 ### Environment Variables
@@ -272,50 +299,20 @@ Environment variables take highest priority and override the config file:
 
 ## Update
 
-### Quick Update (Recommended)
-
 ```bash
+# Quick update
 kite update
-```
 
-### Check for Updates
-
-```bash
+# Check for updates only
 kite update --check
-```
 
-### Manual Update
-
-```bash
-# Option 1: Re-run install script
+# Manual update
 curl -sSL https://raw.githubusercontent.com/kavinkumar999/kite-cli/main/install.sh | bash
-
-# Option 2: Build from source
-cd /path/to/kite-cli
-git pull origin main
-make install
-```
-
-## Version
-
-Check your installed version:
-
-```bash
-kite version
-```
-
-Output:
-```
-Kite CLI v0.1.0
-  Build time: 2026-03-15 10:30:00
-  Git commit: abc1234
-  Go version: go1.21.0
-  OS/Arch:    darwin/arm64
 ```
 
 ## Uninstall
 
-### Quick Uninstall (Recommended)
+### Quick Uninstall
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/kavinkumar999/kite-cli/main/uninstall.sh | bash
@@ -324,36 +321,17 @@ curl -sSL https://raw.githubusercontent.com/kavinkumar999/kite-cli/main/uninstal
 ### Manual Uninstall
 
 ```bash
-# 1. Remove binary
-rm ~/bin/kite
-
-# 2. Remove config file (contains your credentials)
-rm ~/.kite.yaml
-
-# 3. Remove shell completions
-rm ~/.zsh/completions/_kite 2>/dev/null
-
-# 4. Remove PATH entry from ~/.zshrc (optional)
-# Edit ~/.zshrc and remove the line: export PATH="$HOME/bin:$PATH"
-
-# 5. Remove cloned repository (if exists)
-rm -rf /path/to/kite-cli
-```
-
-### One-liner Uninstall (No prompts)
-
-```bash
 rm -f ~/bin/kite ~/.kite.yaml ~/.zsh/completions/_kite
 ```
 
 ::: danger Warning
-This will delete your saved credentials. Back up `~/.kite.yaml` if needed.
+This will delete your saved credentials for all family accounts. Back up `~/.kite.yaml` if needed.
 :::
 
 ## Security
 
 - Config file permissions are set to `600` (owner read/write only)
-- Credentials can be stored in environment variables instead of file
+- All credentials stored locally - no cloud sync
 - Never commit `~/.kite.yaml` to git
 
 ## Troubleshooting
