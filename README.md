@@ -6,6 +6,7 @@ Manage multiple Zerodha Kite accounts from your terminal. Perfect for families -
 
 - **Family Account Management** - Add unlimited accounts with custom aliases (self, spouse, dad, mom)
 - **Instant Switching** - Switch between accounts with `kite use <alias>`
+- **LLM & AI Ready** - Connect with Claude, ChatGPT, or any AI assistant to trade using natural language
 - **Fast Trading** - Execute orders without opening a browser
 - **Secure** - All credentials stored locally with strict file permissions
 
@@ -177,6 +178,37 @@ kite watchlist ITC RELIANCE TCS    # Multiple quotes
 ```
 
 > **Note**: Market data commands require Quote API subscription from Zerodha.
+
+## LLM & AI Integration
+
+Connect Kite CLI with any AI assistant that can execute shell commands. Trade using natural language!
+
+### Supported Tools
+
+- **Claude** - Claude Desktop or API with tool use
+- **ChatGPT** - Code Interpreter or custom GPTs
+- **Cursor/Cline/Aider** - Built-in terminal access
+- **Open Interpreter** - Natural language to shell
+- **LangChain/AutoGPT** - Custom agents with shell tools
+
+### Example Conversation
+
+```
+You: "Buy 10 shares of Reliance for my dad's account"
+AI: Executing: kite use dad && kite buy RELIANCE 10
+
+You: "Check spouse's portfolio and show profit/loss"
+AI: Executing: kite use spouse && kite holdings
+```
+
+### Safety: Use Dry Run
+
+Always test with `--dry-run` when using AI assistants:
+
+```bash
+kite buy RELIANCE 10 --dry-run
+# ✓ Dry run - order NOT placed
+```
 
 ## Order Flags
 

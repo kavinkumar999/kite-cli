@@ -20,9 +20,9 @@ features:
   - icon: 🔄
     title: Instant Account Switching
     details: Switch between accounts with a single command. No logout/login needed. Execute trades for any family member in seconds.
-  - icon: ⚡
-    title: Lightning Fast Trading
-    details: Place orders instantly without opening a browser. Buy, sell, check holdings - all from your terminal.
+  - icon: 🤖
+    title: LLM & AI Ready
+    details: Connect with Claude, ChatGPT, or any AI assistant. Execute trades using natural language through your favorite LLM.
   - icon: 🛡️
     title: Secure & Local
     details: All credentials stored locally with strict file permissions. No cloud storage. Your data stays on your machine.
@@ -49,7 +49,64 @@ kite use spouse && kite buy TCS 5
 kite use dad && kite sell INFY 20
 ```
 
-## Installation
+## LLM & AI Integration
+
+Kite CLI works seamlessly with AI assistants. Connect it with Claude, ChatGPT, Cursor, or any LLM that can execute shell commands. Trade using natural language!
+
+### How It Works
+
+Give your AI assistant access to the terminal, and it can execute Kite CLI commands on your behalf:
+
+```
+You: "Buy 10 shares of Reliance for my dad's account"
+AI: Executing: kite use dad && kite buy RELIANCE 10
+
+You: "What's the current margin available in spouse's account?"
+AI: Executing: kite use spouse && kite margins
+
+You: "Sell all INFY shares from my account at limit price 1500"
+AI: Executing: kite use self && kite sell INFY 50 -p 1500
+```
+
+### Supported AI Tools
+
+| Tool | Integration |
+|------|-------------|
+| **Claude** | Use with Claude Desktop or API with tool use |
+| **ChatGPT** | Via Code Interpreter or custom GPTs with shell access |
+| **Cursor** | Built-in terminal access - just ask in chat |
+| **Cline/Aider** | Direct terminal execution support |
+| **Open Interpreter** | Natural language to shell commands |
+| **LangChain/AutoGPT** | Build custom agents with shell tools |
+
+### Example: Claude with MCP
+
+If you're using Claude with Model Context Protocol (MCP), Kite CLI commands work directly:
+
+```
+You: Check my holdings and tell me which stocks are in profit
+
+Claude: I'll check your holdings.
+> kite holdings
+
+Based on your holdings:
+- RELIANCE: +12.5% (in profit)
+- TCS: +8.2% (in profit)  
+- INFY: -3.1% (in loss)
+```
+
+### Safety Tips
+
+::: warning Use Dry Run for Testing
+When using AI assistants, always test with `--dry-run` first to verify the command before executing real trades.
+:::
+
+```bash
+# AI can test orders safely
+kite buy RELIANCE 10 --dry-run
+# ✓ Dry run - order NOT placed
+# Order details: BUY RELIANCE x10 @ MARKET
+```
 
 ### Quick Install (Recommended)
 
